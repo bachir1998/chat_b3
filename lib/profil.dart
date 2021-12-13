@@ -121,7 +121,7 @@ class ProfilPageState extends State<ProfilPage>{
   {
     return PageView(
       children: <Widget> [
-       Text("Profil") ,
+       Text("Profil  : "+utilisateur.name+" "+utilisateur.lastname) ,
        Parameter(identifiant:widget.identifiant)
 
 

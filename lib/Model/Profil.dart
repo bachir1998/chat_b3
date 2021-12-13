@@ -15,13 +15,18 @@ class Profil{
     image = map["IMAGE"];
 
 
-
-
-
-
-
   }
 
   Profil.vide();
 
+  Map <String, dynamic> toMap(){
+    Map<String, dynamic> map;
+    return map = {
+      'name': name,
+      'lastname' : lastname,
+      'image' : image,
+      'uid': uid
+
+    };
+  }
 }

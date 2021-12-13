@@ -1,3 +1,4 @@
+import 'package:chat_b3/discuss/chat.dart';
 import 'package:chat_b3/helper/firestoreHelper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -60,10 +61,20 @@ class ParameterState extends State<Parameter> {
               itemCount: documents.length,
               itemBuilder: (context, int index) {
                 Profil user = Profil(documents[index]);
-                return (user.uid != widget.identifiant) ? ListTile(
-                  title: Text(user.name+" "+user.lastname),
+                return (user.uid != widget.identifiant) ?
+                InkWell(
+                    child : ListTile(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(
+                              builder : (BuildContext context){
+                                return Chat(moi: utilisateur,partenaire: user,);
+                              }
+                          ));
+                        },
+                        title: Text(user.name+" "+user.lastname),
+                      ),
 
-                ) : Container();
+                    ) : Container();
                 /* return ListTile(
                       title: Text(user.name),
                     );*/

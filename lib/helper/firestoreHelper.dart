@@ -13,6 +13,8 @@ class Firestorehelper{
   final cloudfFirestore   =  FirebaseFirestore.instance;
   final firestore_user  =  FirebaseFirestore.instance.collection("user");
   final firestockageImage =  FirebaseStorage.instance.ref("imageProfil");
+  final firestore_message =  FirebaseFirestore.instance.collection("message");
+  final firestore_conversation =  FirebaseFirestore.instance.collection("conversation");
 
 
   //Méthode
@@ -77,6 +79,51 @@ class Firestorehelper{
         .doc(identifiant).get();
     // construction du type profil dans notre exemple
     return Profil(snapshot);
+  }
+
+  sendMessage( String texte, Profil partenaire, Profil moi) {
+    DateTime date = DateTime.now();
+    Map<String, dynamic> map = {
+      'from ': moi.uid,
+      'to' : partenaire.uid,
+      'texte' : texte,
+      'envoiMessage' : date
+    };
+
+    addMessage(getMessageRef(moi.uid, partenaire.uid, date.toString()), map);
+    addConversation(moi.uid, getConversation(moi.uid,partenaire, texte, date));
+    addConversation(partenaire.uid, getConversation(moi.uid,partenaire, texte, date));
+  }
+
+  addMessage(String uid, Map<String, dynamic> map)
+  {
+    firestore_message.doc(uid).set(map);
+
+  }
+  addConversation(String uid, Map<String, dynamic> map)
+  {
+    firestore_conversation.doc(uid).set(map);
+
+  }
+
+  Map<String, dynamic> getConversation(String sender, Profil partenaire, String texte, DateTime time){
+     Map<String, dynamic> map =partenaire.toMap();
+     map['idMoi'] = sender;
+     map['lastMessage'] = texte;
+     map['EnvoiMessage'] = time;
+     map['destinataire'] = partenaire.uid;
+     return map;
+  }
+
+  String getMessageRef ( String from, String to, String date) {
+    String resultat = "";
+    List<String> liste = [from, to];
+    liste.sort((a,b)=>a.compareTo(b));
+    for(var x in liste){
+      resultat += x+ "+";
+    }
+    resultat = resultat + date;
+    return resultat;
   }
 }
 
